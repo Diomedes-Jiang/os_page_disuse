@@ -45,7 +45,7 @@ def calPos(pos, n):
 
 def run1(inp, txt, arr, pos):
     page = int(inp.get())
-    pos_start=int(pos.get(),16)
+    pos_start = int(pos.get(), 16)
     txt.insert(END, "FIFO页面置换过程为:\n")
     result = []
     loss_page = 0
@@ -61,11 +61,14 @@ def run1(inp, txt, arr, pos):
                     result.append(arr[j])
                     loss_page += 1
                     txt.insert(END, "\n")
-                    txt.insert(END, "弹出的页号为：%s\n" % bin(calPos(pos_start, temp)).replace('0b',''))
+                    txt.insert(END, "弹出页面的物理地址为：%s\n" % bin(calPos(pos_start, temp)).replace('0b', ''))
+                    txt.insert(END, "弹出页面的相对页号为：%s\n" % temp)
+                    txt.insert(END, "当前工作集内的页面为：")
                     txt.insert(END, result)
             break
         elif item in result:
             txt.insert(END, "no exchange\n")
+            txt.insert(END, "当前工作集内的页面为：")
             txt.insert(END, result)
             sum += 1
         else:
@@ -73,10 +76,12 @@ def run1(inp, txt, arr, pos):
             loss_page += 1
             sum += 1
             txt.insert(END, "\n")
+            txt.insert(END, "当前工作集内的页面为：")
             txt.insert(END, result)
     result_page = float((loss_page + page) / len(arr))
     txt.insert(END, "FIFO缺页率为：%.2f\n" % result_page)
     txt.insert(END, "\n")
+
 
 def run2(inp, txt, arr, pos):
     page = int(inp.get())
@@ -94,6 +99,7 @@ def run2(inp, txt, arr, pos):
                     del result[result.index(arr[j])]
                     result.insert(0, p)
                     txt.insert(END, "\n")
+                    txt.insert(END, "当前工作集内的页面为：")
                     txt.insert(END, result)
                 else:
                     temp = int(result[-1])
@@ -101,7 +107,9 @@ def run2(inp, txt, arr, pos):
                     result.insert(0, arr[j])
                     loss_page += 1
                     txt.insert(END, "\n")
-                    txt.insert(END, "弹出的页号为：%s\n" % bin(calPos(pos_start, temp)).replace('0b',''))
+                    txt.insert(END, "弹出页面的物理地址为：%s\n" % bin(calPos(pos_start, temp)).replace('0b', ''))
+                    txt.insert(END, "弹出页面的相对页号为：%s\n" % temp)
+                    txt.insert(END, "当前工作集内的页面为：")
                     txt.insert(END, result)
             break
         elif item in result:
@@ -110,6 +118,7 @@ def run2(inp, txt, arr, pos):
             del result[result.index(item)]
             result.insert(0, p)
             txt.insert(END, "\n")
+            txt.insert(END, "当前工作集内的页面为：")
             txt.insert(END, result)
             sum += 1
         else:
@@ -117,6 +126,7 @@ def run2(inp, txt, arr, pos):
             loss_page += 1
             sum += 1
             txt.insert(END, "\n")
+            txt.insert(END, "当前工作集内的页面为：")
             txt.insert(END, result)
     result_page = float((loss_page) / len(arr))
     txt.insert(END, "LRU缺页率为：%.2f" % result_page)
@@ -150,8 +160,9 @@ def run3(inp, txt, arr, pos):
                     p = result[result.index(arr[j])]
                     del result[result.index(arr[j])]
                     result.insert(0, p)
-                    txt.insert(END, result)
                     txt.insert(END, "\n")
+                    txt.insert(END, "当前工作集内的页面为：")
+                    txt.insert(END, result)
                 else:
                     result_number = bidui(arr[j:len(arr)], result)
                     for o in result:
@@ -159,21 +170,28 @@ def run3(inp, txt, arr, pos):
                             result.remove(o)
                             result.append(arr[j])
                             loss_page += 1
-                            txt.insert(END, "弹出的页号为：%s\n" % bin(calPos(pos_start, int(o))).replace('0b',''))
-                            txt.insert(END, result)
                             txt.insert(END, "\n")
+                            txt.insert(END,
+                                       "弹出页面的物理地址为：%s\n" % bin(calPos(pos_start, int(o))).replace('0b', ''))
+                            txt.insert(END, "弹出页面的相对页号为：%s\n" % int(o))
+                            txt.insert(END, "当前工作集内的页面为：")
+                            txt.insert(END, result)
             break
         elif item in result:
-            txt.insert(END, "no exchange\n")
-            txt.insert(END, result)
             txt.insert(END, "\n")
+            txt.insert(END, "no exchange\n")
+            txt.insert(END, "当前工作集内的页面为：")
+            txt.insert(END, result)
+
             sum += 1
         else:
             result.append(item)
             loss_page += 1
             sum += 1
-            txt.insert(END, result)
             txt.insert(END, "\n")
+            txt.insert(END, "当前工作集内的页面为：")
+            txt.insert(END, result)
+
     result_page = float((loss_page) / len(arr))
     txt.insert(END, "OPT缺页率为：%.2f" % result_page)
     txt.insert(END, "\n")
@@ -196,6 +214,7 @@ def run4(inp, txt, arr, pos):
             for i in clock.frames:
                 if i is not None:
                     ans.append(i['page'])
+            txt.insert(END, "当前工作集内的页面为：")
             txt.insert(END, ans)
         elif status == None:
             txt.insert(END, "no exchange\n")
@@ -203,6 +222,7 @@ def run4(inp, txt, arr, pos):
             for i in clock.frames:
                 if i is not None:
                     ans.append(i['page'])
+            txt.insert(END, "当前工作集内的页面为：")
             txt.insert(END, ans)
             sum += 1
         else:
@@ -213,7 +233,9 @@ def run4(inp, txt, arr, pos):
             for i in clock.frames:
                 if i is not None:
                     ans.append(i['page'])
-            txt.insert(END, "弹出的页号为：%s\n" % bin(calPos(pos_start, int(status))).replace('0b',''))
+            txt.insert(END, "弹出页面的物理地址为：%s\n" % bin(calPos(pos_start, int(status))).replace('0b', ''))
+            txt.insert(END, "弹出页面的相对页号为：%s\n" % int(status))
+            txt.insert(END, "当前工作集内的页面为：")
             txt.insert(END, ans)
     result_page = float((loss_page + page) / len(arr))
     txt.insert(END, "CLOCK缺页率为：%.2f\n" % result_page)
@@ -241,7 +263,7 @@ def main(arr=None):
     label = Label(root, text="待处理页面序列为：")
     label.place(relx=0.1, rely=0.2, relwidth=0.8, relheight=0.016)
 
-    lb1 = Label(root, text='请输入物理块儿数：按下面三个按钮之一进行算法验证')
+    lb1 = Label(root, text='请输入工作集大小：按下面四个按钮之一进行算法验证')
     lb1.place(relx=0.1, rely=0.24, relwidth=0.8, relheight=0.1)
     str_arr = str(arr)
     lb2 = Label(root, text=str_arr)
@@ -264,7 +286,6 @@ def main(arr=None):
     btn3 = Button(root, text='CLOCK', command=lambda: run4(inp, txt, arr, pos))
     btn3.place(relx=0.7, rely=0.4, relwidth=0.2, relheight=0.1)
 
-    # 在窗体垂直自上而下位置60%处起，布局相对窗体高度40%高的文本框
     lb_txt = Label(root, text='检验结果:')
     lb_txt.place(relx=0.1, rely=0.5, relwidth=0.3, relheight=0.1)
     txt = Text(root)
